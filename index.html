@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeX Pro - Premium Paper Trading</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent-glow: rgba(102, 126, 234, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+        }
+
+        .logo i {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-box {
+            position: relative;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 0.7rem 1.2rem 0.7rem 3rem;
+            color: var(--text-primary);
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 30px var(--accent-glow);
+            width: 280px;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus + .search-icon {
+            color: #667eea;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .header-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-btn:hover {
+            background: var(--primary-gradient);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-gradient);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Market Summary */
+        .market-summary {
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .balance-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--success-gradient);
+        }
+
+        .balance-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .balance-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-item p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .indices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .index-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .index-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .index-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+        }
+
+        .index-card:hover::before {
+            height: 8px;
+            background: var(--secondary-gradient);
+        }
+
+        .index-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .index-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .index-change {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .positive { 
+            color: #00ff88; 
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        .negative { 
+            color: #ff4757; 
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+        }
+
+        /* Trading Tabs */
+        .trading-tabs {
+            display: flex;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .tab.active::before {
+            left: 0;
+        }
+
+        .tab.active {
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Stock List */
+        .stock-list {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stock-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--glass-border);
+            letter-spacing: 0.5px;
+        }
+
+        .stock-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-item::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .stock-item:hover::before {
+            left: 100%;
+        }
+
+        .stock-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stock-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stock-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .stock-prices {
+            text-align: right;
+        }
+
+        .current-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .price-range {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stock-change {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .change-value {
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .change-value.positive {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .change-value.negative {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .change-value:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Trading Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 450px;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .trade-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 1rem 1.2rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 25px var(--accent-glow);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .trade-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-buy {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-sell {
+            background: var(--danger-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid var(--glass-border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 1rem;
+            z-index: 50;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem;
+            border-radius: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .nav-item.active i {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+        }
+
+        .nav-item:hover:not(.active) {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .demo-banner {
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: sticky;
+            bottom: 80px;
+            z-index: 40;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 -5px 20px rgba(240, 147, 251, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 -5px 20px rgba(240, 147, 251, 0.3); }
+            to { box-shadow: 0 -5px 30px rgba(240, 147, 251, 0.6); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #00ff88;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ff4757;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .search-box {
+                width: 180px;
+            }
+
+            .search-box:focus {
+                width: 200px;
+            }
+
+            .indices-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .balance-info {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .balance-item h3 {
+                font-size: 2rem;
+            }
+
+            .stock-header, .stock-item {
+                grid-template-columns: 2fr 1fr 1fr;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+                padding: 2rem;
+            }
+
+            .market-summary {
+                padding: 1rem;
+                margin-bottom: 6rem;
+            }
+
+            .trading-tabs {
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+
+            .trading-tabs::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="refreshApp()">
+                <i class="fas fa-chart-line"></i>
+                TradeX Pro
+            </div>
+            <div class="header-actions">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Search stocks..." id="searchInput">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <button class="header-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="header-btn" onclick="showProfile()">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Market Summary -->
+    <div class="market-summary">
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-info">
+                <div class="balance-item">
+                    <h3>₹10,00,000</h3>
+                    <p>Portfolio Value</p>
+                </div>
+                <div class="balance-item">
+                    <h3>+₹25,450</h3>
+                    <p>Today's P&L</p>
+                </div>
+                <div class="balance-item">
+                    <h3>₹2,50,000</h3>
+                    <p>Available Balance</p>
+                </div>
+                <div class="balance-item">
+                    <h3>15</h3>
+                    <p>Active Positions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Indices -->
+        <div class="indices-grid">
+            <div class="index-card" onclick="viewIndexDetails('NIFTY50')">
+                <div class="index-name">NIFTY 50</div>
+                <div class="index-value">24,429</div>
+                <div class="index-change">
+                    <span class="negative">
+                        <i class="fas fa-arrow-down"></i>
+                        -244.4 (-1%)
+                    </span>
+                    <i class="fas fa-external-link-alt" style="opacity: 0.5;"></i>
+                </div>
+            </div>
+            <div class="index-card" onclick="viewIndexDetails('BANKNIFTY')">
+                <div class="index-name">BANK NIFTY</div>
+                <div class="index-value">55,071</div>
+                <div class="index-change">
+                    <span class="negative">
+                        <i class="fas fa-arrow-down"></i>
+                        -686.6 (-1.25%)
+                    </span>
+                    <i class="fas fa-external-link-alt" style="opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Tabs -->
+        <div class="trading-tabs">
+            <div class="tab active" onclick="switchTab(this, 'nse')">
+                <i class="fas fa-chart-bar"></i> NSE
+            </div>
+            <div class="tab" onclick="switchTab(this, 'mcx')">
+                <i class="fas fa-coins"></i> MCX
+            </div>
+            <div class="tab" onclick="switchTab(this, 'opt')">
+                <i class="fas fa-cog"></i> OPT
+            </div>
+            <div class="tab" onclick="switchTab(this, 'crypto')">
+                <i class="fab fa-bitcoin"></i> CRYPTO
+            </div>
+            <div class="tab" onclick="switchTab(this, 'forex')">
+                <i class="fas fa-dollar-sign"></i> FOREX
+            </div>
+        </div>
+
+        <!-- Stock List -->
+        <div class="stock-list">
+            <div class="stock-header">
+                <div><i class="fas fa-building"></i> SYMBOL</div>
+                <div><i class="fas fa-arrow-down"></i> SELL</div>
+                <div><i class="fas fa-arrow-up"></i> BUY</div>
+            </div>
+            
+            <div class="stock-item" onclick="openTradeModal('BPCL', 319.35)">
+                <div class="stock-info">
+                    <h3>BPCL</h3>
+                    <p>28Aug2025 | CH: 7.35 | LTP: 318.95</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹319.05</div>
+                    <div class="price-range">L: 309.8 | H: 320.8</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value positive">₹319.35</div>
+                    <button class="change-value positive" onclick="event.stopPropagation(); quickTrade('BPCL', 'buy')">
+                        <i class="fas fa-plus"></i> BUY
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('BANKNIFTY', 55075)">
+                <div class="stock-info">
+                    <h3>BANKNIFTY</h3>
+                    <p>28Aug2025 | CH: -686.6 | LTP: 55071</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹55,071</div>
+                    <div class="price-range">L: 55070 | H: 55799.8</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value negative">₹55,075</div>
+                    <button class="change-value negative" onclick="event.stopPropagation(); quickTrade('BANKNIFTY', 'sell')">
+                        <i class="fas fa-minus"></i> SELL
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('ABCAPITAL', 272)">
+                <div class="stock-info">
+                    <h3>ABCAPITAL</h3>
+                    <p>28Aug2025 | CH: -7.85 | LTP: 271.95</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹271.75</div>
+                    <div class="price-range">L: 271.75 | H: 280.95</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value negative">₹272</div>
+                    <button class="change-value negative" onclick="event.stopPropagation(); quickTrade('ABCAPITAL', 'sell')">
+                        <i class="fas fa-minus"></i> SELL
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('NIFTY', 24429)">
+                <div class="stock-info">
+                    <h3>NIFTY</h3>
+                    <p>28Aug2025 | CH: -244.4 | LTP: 24429</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹24,427.7</div>
+                    <div class="price-range">L: 24413.1 | H: 24694</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value negative">₹24,429</div>
+                    <button class="change-value negative" onclick="event.stopPropagation(); quickTrade('NIFTY', 'sell')">
+                        <i class="fas fa-minus"></i> SELL
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('FINNIFTY', 26233.5)">
+                <div class="stock-info">
+                    <h3>FINNIFTY</h3>
+                    <p>28Aug2025 | CH: -270.2 | LTP: 26238.7</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹26,225</div>
+                    <div class="price-range">L: 26211.2 | H: 26479.9</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value negative">₹26,233.5</div>
+                    <button class="change-value negative" onclick="event.stopPropagation(); quickTrade('FINNIFTY', 'sell')">
+                        <i class="fas fa-minus"></i> SELL
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('BANKBARODA', 240.01)">
+                <div class="stock-info">
+                    <h3>BANKBARODA</h3>
+                    <p>28Aug2025 | CH: -3.33 | LTP: 239.85</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹239.85</div>
+                    <div class="price-range">L: 239.61 | H: 243.63</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value negative">₹240.01</div>
+                    <button class="change-value negative" onclick="event.stopPropagation(); quickTrade('BANKBARODA', 'sell')">
+                        <i class="fas fa-minus"></i> SELL
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('RELIANCE', 2456.80)">
+                <div class="stock-info">
+                    <h3>RELIANCE</h3>
+                    <p>28Aug2025 | CH: 15.30 | LTP: 2456.80</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹2,456.80</div>
+                    <div class="price-range">L: 2440.50 | H: 2465.20</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value positive">₹2,460.15</div>
+                    <button class="change-value positive" onclick="event.stopPropagation(); quickTrade('RELIANCE', 'buy')">
+                        <i class="fas fa-plus"></i> BUY
+                    </button>
+                </div>
+            </div>
+
+            <div class="stock-item" onclick="openTradeModal('TCS', 3890.45)">
+                <div class="stock-info">
+                    <h3>TCS</h3>
+                    <p>28Aug2025 | CH: 22.80 | LTP: 3890.45</p>
+                </div>
+                <div class="stock-prices">
+                    <div class="current-price">₹3,890.45</div>
+                    <div class="price-range">L: 3875.20 | H: 3905.80</div>
+                </div>
+                <div class="stock-change">
+                    <div class="change-value positive">₹3,895.20</div>
+                    <button class="change-value positive" onclick="event.stopPropagation(); quickTrade('TCS', 'buy')">
+                        <i class="fas fa-plus"></i> BUY
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <i class="fas fa-flask"></i> DEMO ACCOUNT - Paper Trading Only
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item" onclick="switchPage(this, 'watchlist')">
+            <i class="fas fa-list"></i>
+            <span>Watchlist</span>
+        </a>
+        <a href="#" class="nav-item active" onclick="switchPage(this, 'trades')">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Trades</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage(this, 'portfolio')">
+            <i class="fas fa-briefcase"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage(this, 'account')">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <!-- Trading Modal -->
+    <div class="modal" id="tradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Trade BPCL</h2>
+                <button class="close" onclick="closeTradeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="trade-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label><i class="fas fa-list-alt"></i> Order Type</label>
+                    <select id="orderType" onchange="handleOrderTypeChange()">
+                        <option value="market">Market Order</option>
+                        <option value="limit">Limit Order</option>
+                        <option value="stop-loss">Stop Loss</option>
+                        <option value="stop-limit">Stop Limit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-hashtag"></i> Quantity</label>
+                    <input type="number" placeholder="Enter quantity" value="1" min="1" id="quantity" onchange="calculateTotal()">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-rupee-sign"></i> Price</label>
+                    <input type="number" placeholder="Enter price" id="tradePrice" step="0.01" onchange="calculateTotal()">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calculator"></i> Total Amount</label>
+                    <input type="text" id="totalAmount" readonly style="background: rgba(102, 126, 234, 0.1);">
+                </div>
+                <div class="trade-buttons">
+                    <button type="button" class="btn btn-buy" onclick="executeTrade('buy')">
+                        <i class="fas fa-arrow-up"></i> BUY
+                        <span class="loading" id="buyLoading" style="display: none; margin-left: 10px;"></span>
+                    </button>
+                    <button type="button" class="btn btn-sell" onclick="executeTrade('sell')">
+                        <i class="fas fa-arrow-down"></i> SELL
+                        <span class="loading" id="sellLoading" style="display: none; margin-left: 10px;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let currentStock = '';
+        let currentPrice = 0;
+        let currentTab = 'nse';
+        let isMarketOpen = true;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            createBackgroundAnimation();
+            startPriceUpdates();
+            showWelcomeMessage();
+        });
+
+        // Background animation
+        function createBackgroundAnimation() {
+            const container = document.getElementById('bgAnimation');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 6 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Tab switching
+        function switchTab(element, tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            currentTab = tab;
+            
+            showNotification(`Switched to ${tab.toUpperCase()} market`, 'success');
+            
+            // Simulate loading new data
+            const stockList = document.querySelector('.stock-list');
+            stockList.style.opacity = '0.5';
+            setTimeout(() => {
+                stockList.style.opacity = '1';
+                loadTabData(tab);
+            }, 500);
+        }
+
+        function loadTabData(tab) {
+            // Simulate loading different data for different tabs
+            const messages = {
+                'nse': 'NSE stocks loaded',
+                'mcx': 'Commodity futures loaded', 
+                'opt': 'Options chain loaded',
+                'crypto': 'Cryptocurrency data loaded',
+                'forex': 'Forex pairs loaded'
+            };
+            console.log(messages[tab]);
+        }
+
+        // Page switching
+        function switchPage(element, page) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            
+            const pages = {
+                'watchlist': 'Your Watchlist',
+                'trades': 'Trading Terminal', 
+                'portfolio': 'Portfolio Overview',
+                'account': 'Account Settings'
+            };
+            
+            showNotification(`Navigated to ${pages[page]}`, 'success');
+        }
+
+        // Trading modal functions
+        function openTradeModal(symbol, price) {
+            currentStock = symbol;
+            currentPrice = price;
+            document.getElementById('modalTitle').textContent = `Trade ${symbol}`;
+            document.getElementById('tradePrice').value = price;
+            document.getElementById('tradeModal').style.display = 'flex';
+            calculateTotal();
+        }
+
+        function closeTradeModal() {
+            document.getElementById('tradeModal').style.display = 'none';
+        }
+
+        function handleOrderTypeChange() {
+            const orderType = document.getElementById('orderType').value;
+            const priceInput = document.getElementById('tradePrice');
+            
+            if (orderType === 'market') {
+                priceInput.disabled = true;
+                priceInput.value = currentPrice;
+            } else {
+                priceInput.disabled = false;
+            }
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('tradePrice').value;
+            const total = (quantity * price).toFixed(2);
+            document.getElementById('totalAmount').value = `₹${total}`;
+        }
+
+        function executeTrade(type) {
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('tradePrice').value;
+            const orderType = document.getElementById('orderType').value;
+            
+            // Show loading
+            const loadingElement = document.getElementById(type + 'Loading');
+            loadingElement.style.display = 'inline-block';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                loadingElement.style.display = 'none';
+                
+                const message = `${type.toUpperCase()} order placed: ${quantity} shares of ${currentStock} at ₹${price} (${orderType})`;
+                showNotification(message, 'success');
+                closeTradeModal();
+                
+                // Update balance (demo)
+                updateBalance(type, quantity, price);
+            }, 1500);
+        }
+
+        function quickTrade(symbol, type) {
+            const messages = {
+                'buy': `Quick BUY order placed for ${symbol}`,
+                'sell': `Quick SELL order placed for ${symbol}`
+            };
+            showNotification(messages[type], 'success');
+        }
+
+        function updateBalance(type, quantity, price) {
+            // Demo balance update
+            const total = quantity * price;
+            console.log(`${type} ${quantity} shares at ₹${price} - Total: ₹${total}`);
+        }
+
+        // Header functions
+        function refreshApp() {
+            showNotification('Refreshing market data...', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+
+        function showNotifications() {
+            const notifications = [
+                'BPCL crossed resistance at ₹320',
+                'NIFTY 50 down 1% in early trading',
+                'Your RELIANCE order executed'
+            ];
+            
+            const randomNotif = notifications[Math.floor(Math.random() * notifications.length)];
+            showNotification(randomNotif, 'success');
+        }
+
+        function showProfile() {
+            showNotification('Profile settings opened', 'success');
+        }
+
+        function viewIndexDetails(index) {
+            showNotification(`Viewing ${index} details`, 'success');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const stockItems = document.querySelectorAll('.stock-item');
+            let visibleCount = 0;
+            
+            stockItems.forEach(item => {
+                const symbol = item.querySelector('h3').textContent.toLowerCase();
+                if (symbol.includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'grid';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            if (searchTerm && visibleCount === 0) {
+                showNotification('No stocks found', 'error');
+            }
+        });
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function showWelcomeMessage() {
+            setTimeout(() => {
+                showNotification('Welcome to TradeX Pro! Happy trading!', 'success');
+            }, 1000);
+        }
+
+        // Real-time price updates
+        function startPriceUpdates() {
+            setInterval(() => {
+                if (!isMarketOpen) return;
+                
+                const priceElements = document.querySelectorAll('.current-price');
+                const indexValues = document.querySelectorAll('.index-value');
+                
+                [...priceElements, ...indexValues].forEach(element => {
+                    const currentText = element.textContent.replace(/[₹,]/g, '');
+                    const currentPrice = parseFloat(currentText);
+                    const changePercent = (Math.random() - 0.5) * 0.02; // ±1% change
+                    const newPrice = currentPrice * (1 + changePercent);
+                    
+                    // Animate price change
+                    element.style.transform = 'scale(1.1)';
+                    element.style.color = changePercent > 0 ? '#00ff88' : '#ff4757';
+                    
+                    setTimeout(() => {
+                        element.textContent = element.classList.contains('index-value') 
+                            ? newPrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            : '₹' + newPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        element.style.transform = 'scale(1)';
+                        element.style.color = 'var(--text-primary)';
+                    }, 200);
+                });
+            }, 4000);
+        }
+
+        // Market status toggle
+        function toggleMarket() {
+            isMarketOpen = !isMarketOpen;
+            const status = isMarketOpen ? 'Market is now OPEN' : 'Market is now CLOSED';
+            showNotification(status, isMarketOpen ? 'success' : 'error');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('tradeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTradeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTradeModal();
+            }
+            if (e.key === 'Enter' && document.getElementById('tradeModal').style.display === 'flex') {
+                executeTrade('buy');
+            }
+        });
+
+        // Touch gestures for mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            // Pull to refresh
+            if (diff < -100 && window.scrollY === 0) {
+                showNotification('Refreshing...', 'success');
+                setTimeout(() => location.reload(), 1000);
+            }
+        });
+
+        // Add some demo interactions
+        document.addEventListener('click', function(e) {
+            // Create ripple effect on clicks
+            if (e.target.classList.contains('btn') || e.target.classList.contains('tab') || e.target.classList.contains('nav-item')) {
+                createRipple(e);
+            }
+        });
+
+        function createRipple(event) {
+            const button = event.target;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.style.position = 'absolute';
+            circle.style.borderRadius = '50%';
+            circle.style.background = 'rgba(255, 255, 255, 0.3)';
+            circle.style.transform = 'scale(0)';
+            circle.style.animation = 'ripple 0.6s linear';
+            circle.style.pointerEvents = 'none';
+
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) {
+                ripple.remove();
+            }
+
+            circle.className = 'ripple';
+            button.appendChild(circle);
+        }
+
+        // CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            .btn, .tab, .nav-item {
+                position: relative;
+                overflow: hidden;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Demo data simulation
+        const demoData = {
+            portfolio: { value: 1000000, pnl: 25450, available: 250000, positions: 15 },
+            notifications: [
+                'BPCL crossed resistance at ₹320',
+                'NIFTY 50 down 1% in early trading', 
+                'Your RELIANCE order executed',
+                'Market volatility alert',
+                'New IPO listing tomorrow'
+            ]
+        };
+
+        // Simulate portfolio updates
+        setInterval(() => {
+            const balanceItems = document.querySelectorAll('.balance-item h3');
+            if (balanceItems.length >= 2) {
+                const pnlChange = (Math.random() - 0.5) * 1000;
+                const newPnl = demoData.portfolio.pnl + pnlChange;
+                demoData.portfolio.pnl = newPnl;
+                
+                balanceItems[1].textContent = newPnl > 0 ? `+₹${Math.abs(newPnl).toFixed(0)}` : `-₹${Math.abs(newPnl).toFixed(0)}`;
+                balanceItems[1].style.color = newPnl > 0 ? '#00ff88' : '#ff4757';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
